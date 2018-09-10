@@ -21,10 +21,6 @@ func createCollections(db *mongo.Database) {
 
 func startCollection(uuid string, dbClient *mongo.Client, db *mongo.Database, c *govmomi.Client, ctx context.Context, locationUuid string) (Shuki, error) {
 
-	collectionSource := contracts.Location{
-		contracts.IaasHost
-		StoageFilers}
-
 	var wg = new(sync.WaitGroup)
 
 	vmsChan := make(chan []contracts.VsphereVM, 1)
@@ -38,7 +34,6 @@ func startCollection(uuid string, dbClient *mongo.Client, db *mongo.Database, c 
 	go getScsiLunsRoutine(wg, c, ctx, scsiLunsChan, errors)
 	go getVmsRoutine(wg, c, ctx, vmsChan, errors)
 
-	//println("TIME VMS:", int(time.Now().Sub(before).Seconds()), "seconds")
 	go func() {
 		wg.Wait()
 		close(scsiLunsChan)
@@ -61,7 +56,6 @@ func startCollection(uuid string, dbClient *mongo.Client, db *mongo.Database, c 
 				rdm := disk.(*contracts.VsphereRdmDisk)
 				lun := scsiLuns[rdm.LunUuid]
 				rdm.SetVendor(strings.TrimSpace(lun.Vendor))
-				
 			}
 		}
 	}
